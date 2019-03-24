@@ -11,7 +11,8 @@ Artificial_Image = uint8(Artificial_Image);
 figure,
 subplot(2,1,1), imshow(Artificial_Image), title('8 Bits image');
 subplot(2,1,2), imhist(Artificial_Image), title('Histogram');
-%% Adding noises
+%% Adding noise
+
 Img_GaussianNoise = imnoise(Artificial_Image, 'gaussian', 0, 0.02);
 Img_SaltnPepperNoise = imnoise(Artificial_Image, 'speckle', 0.02);
 Img_SpeckleNoise = imnoise(Artificial_Image, 'salt & pepper', 0.02);
@@ -23,103 +24,104 @@ subplot(2,4,3), imshow(Img_SpeckleNoise), title('+ Speckle Noise');
 subplot(2,4,4), imshow(Img_SaltnPepperNoise), title('+ Salt n Pepper Noise');
 subplot(2,4,5), imhist(Artificial_Image), title('Original - Histogram'), axis auto;
 subplot(2,4,6), imhist(Img_GaussianNoise), title('Gaussian Noise - Histogram'), axis auto;
-subplot(2,4,7), imhist(Img_SpeckleNoise), title('Con Ruido Speckle'), axis auto;
-subplot(2,4,8), imhist(Img_SaltnPepperNoise), title('Con Ruido Salt n Pepper'), axis auto;
+subplot(2,4,7), imhist(Img_SpeckleNoise), title('Speckle Noise - Histogram'), axis auto;
+subplot(2,4,8), imhist(Img_SaltnPepperNoise), title('Salt n Pepper Noise - Histogram'), axis auto;
 
+%% 2. Spatial Softener Filters - LSI. GAUSSIAN NOISE.
 
-%% 2. FILTRADO ESPACIAL SUAVIZADOR - Filtrado lineal. RUIDO GAUSSIANO
-Mascara_Lineal1 = (1/25)*ones(5,5);
-Mascara_Lineal2 = (1/1225)*ones(35,35); %1/mxn
+Mask1 = (1/25)*ones(5,5);     % 1/(mxn)
+Mask2 = (1/1225)*ones(35,35); % 1/(mxn)
 
-%SE USA POR DEFECTO 'ZERO PADDING'.
-Img_RuidoGaussiano_Filtro1 = imfilter(Img_GaussianNoise, Mascara_Lineal1);
-Img_RuidoGaussiano_Filtro2 = imfilter(Img_GaussianNoise, Mascara_Lineal2);
-
-figure, 
-subplot(2,2,1), imshow(Img_RuidoGaussiano_Filtro1), title('Filtro GAUSS 5x5');
-subplot(2,2,2), imhist(Img_RuidoGaussiano_Filtro1), title('Histograma con filtro GAUSS'), axis auto;
-subplot(2,2,3), imshow(Img_RuidoGaussiano_Filtro2), title('Filtro GAUSS 35x35');
-subplot(2,2,4), imhist(Img_RuidoGaussiano_Filtro2), title('Histograma con filtro GAUSS 35x35'), axis auto;
-
-% CON MIRROR PADDING.
-Img_RuidoGaussiano_Filtro3 = imfilter(Img_GaussianNoise, Mascara_Lineal1, 'symmetric');
-Img_RuidoGaussiano_Filtro4 = imfilter(Img_GaussianNoise, Mascara_Lineal2, 'symmetric');
+% ZERO PADDING is used by default.
+GaussianFilter_1 = imfilter(Img_GaussianNoise, Mask1);
+GaussianFilter_2 = imfilter(Img_GaussianNoise, Mask2);
 
 figure, 
-subplot(2,2,1), imshow(Img_RuidoGaussiano_Filtro3), title('Filtro GAUSS 5x5');
-subplot(2,2,2), imhist(Img_RuidoGaussiano_Filtro3), title('Histograma con filtro GAUSS - MIRROR PADDING'), axis auto;
-subplot(2,2,3), imshow(Img_RuidoGaussiano_Filtro4), title('Filtro GAUSS 35x35');
-subplot(2,2,4), imhist(Img_RuidoGaussiano_Filtro4), title('Histograma con filtro GAUSS 35x35 - MIRROR PADDING'), axis auto;
+subplot(2,2,1), imshow(GaussianFilter_1), title('GAUSS filter 5x5');
+subplot(2,2,2), imhist(GaussianFilter_1), title('GAUSS filter 5x5 histogram'), axis auto;
+subplot(2,2,3), imshow(GaussianFilter_2), title('GAUSS filter 35x35');
+subplot(2,2,4), imhist(GaussianFilter_2), title('GAUSS filter 35x35 histogram'), axis auto;
 
-%NOTA: LAS MASCARAS SON DE TIPO DOUBLE, y las IMAGENES de UINT8.
-% Como el contorno es mas oscuro se crean valores fuera de la campana.
-% Con MIRROR PADDING, no ocurre.
-%% RUIDO SPECKLE
+% with MIRROR PADDING.
+GaussianFilter_3 = imfilter(Img_GaussianNoise, Mask1, 'symmetric');
+GaussianFilter_4 = imfilter(Img_GaussianNoise, Mask2, 'symmetric');
 
-% CON'ZERO PADDING'.
-Img_RuidoSpeckle_Filtro1 = imfilter(Img_SpeckleNoise, Mascara_Lineal1);
-Img_RuidoSpeckle_Filtro2 = imfilter(Img_SpeckleNoise, Mascara_Lineal2);
-% CON'MIRROR PADDING'.
-Img_RuidoSpeckle_Filtro3 = imfilter(Img_SpeckleNoise, Mascara_Lineal1, 'symmetric');
-Img_RuidoSpeckle_Filtro4 = imfilter(Img_SpeckleNoise, Mascara_Lineal2, 'symmetric');
-
-% CON'ZERO PADDING'.
 figure, 
-subplot(2,2,1), imshow(Img_RuidoSpeckle_Filtro1), title('Filtro SPECKLE 5x5');
-subplot(2,2,2), imhist(Img_RuidoSpeckle_Filtro1), title('Histograma con filtro SPECKLE'), axis auto;
-subplot(2,2,3), imshow(Img_RuidoSpeckle_Filtro2), title('Filtro SPECKLE 35x35');
-subplot(2,2,4), imhist(Img_RuidoSpeckle_Filtro2), title('Histograma con filtro SPECKLE 35x35'), axis auto;
+subplot(2,2,1), imshow(GaussianFilter_3), title('GAUSS filter 5x5');
+subplot(2,2,2), imhist(GaussianFilter_3), title('GAUSS filter 5x5 histogram'), axis auto;
+subplot(2,2,3), imshow(GaussianFilter_4), title('GAUSS filter 35x35');
+subplot(2,2,4), imhist(GaussianFilter_4), title('GAUSS filter 35x35 histogram'), axis auto;
 
-% CON'MIRROR PADDING'.
+%NOTE: Masks are double type and the images uint8.
+%% SPECKLE NOISE
+
+% ZERO PADDING is used by default.
+SpeckleNoiseFilter_1 = imfilter(Img_SpeckleNoise, Mask1);
+SpeckleNoiseFilter_2 = imfilter(Img_SpeckleNoise, Mask2);
+
+% WITH MIRROR PADDING.
+SpeckleNoiseFilter_3 = imfilter(Img_SpeckleNoise, Mask1, 'symmetric');
+SpeckleNoiseFilter_4 = imfilter(Img_SpeckleNoise, Mask2, 'symmetric');
+
+% with ZERO PADDING.
 figure, 
-subplot(2,2,1), imshow(Img_RuidoSpeckle_Filtro3), title('Filtro SPECKLE 5x5');
-subplot(2,2,2), imhist(Img_RuidoSpeckle_Filtro3), title('Histograma con filtro SPECKLE - MIRROR PADDING'), axis auto;
-subplot(2,2,3), imshow(Img_RuidoSpeckle_Filtro4), title('Filtro SPECKLE 35x35');
-subplot(2,2,4), imhist(Img_RuidoSpeckle_Filtro4), title('Histograma con filtro SPECKLE 35x35 - MIRROR PADDING'), axis auto;
+subplot(2,2,1), imshow(SpeckleNoiseFilter_1), title('SPECKLE filter 5x5');
+subplot(2,2,2), imhist(SpeckleNoiseFilter_1), title('SPECKLE filter 5x5 histogram'), axis auto;
+subplot(2,2,3), imshow(SpeckleNoiseFilter_2), title('SPECKLE filter 35x35');
+subplot(2,2,4), imhist(SpeckleNoiseFilter_2), title('SPECKLE filter 35x35 histogram'), axis auto;
+
+% WITH MIRROR PADDING.
+figure, 
+subplot(2,2,1), imshow(SpeckleNoiseFilter_3), title('SPECKLE filter 5x5');
+subplot(2,2,2), imhist(SpeckleNoiseFilter_3), title('SPECKLE filter 5x5 histogram'), axis auto;
+subplot(2,2,3), imshow(SpeckleNoiseFilter_4), title('SPECKLE filter 35x35');
+subplot(2,2,4), imhist(SpeckleNoiseFilter_4), title('SPECKLE filter 35x35 histogram'), axis auto;
 
 %% RUIDO SALT N PEPPER
 
-% CON'ZERO PADDING'.
-Img_RuidoSaltnPepper_Filtro1 = imfilter(Img_SaltnPepperNoise, Mascara_Lineal1);
-Img_RuidoSaltnPepper_Filtro2 = imfilter(Img_SaltnPepperNoise, Mascara_Lineal2);
-% CON'MIRROR PADDING'.
-Img_RuidoSaltnPepper_Filtro3 = imfilter(Img_SaltnPepperNoise, Mascara_Lineal1, 'symmetric');
-Img_RuidoSaltnPepper_Filtro4 = imfilter(Img_SaltnPepperNoise, Mascara_Lineal2, 'symmetric');
+% ZERO PADDING is used by default.
+SaltnPepperNoiseFilter_1 = imfilter(Img_SaltnPepperNoise, Mask1);
+SaltnPepperNoiseFilter_2 = imfilter(Img_SaltnPepperNoise, Mask2);
 
-% CON'ZERO PADDING'.
-figure, 
-subplot(2,2,1), imshow(Img_RuidoSaltnPepper_Filtro1), title('Filtro SaltnPepper 5x5');
-subplot(2,2,2), imhist(Img_RuidoSaltnPepper_Filtro1), title('Histograma con filtro SaltnPepper'), axis auto;
-subplot(2,2,3), imshow(Img_RuidoSaltnPepper_Filtro2), title('Filtro SaltnPepper 35x35');
-subplot(2,2,4), imhist(Img_RuidoSaltnPepper_Filtro2), title('Histograma con filtro SaltnPepper 35x35'), axis auto;
+% WITH MIRROR PADDING.
+SaltnPepperNoiseFilter_3 = imfilter(Img_SaltnPepperNoise, Mask1, 'symmetric');
+SaltnPepperNoiseFilter_4 = imfilter(Img_SaltnPepperNoise, Mask2, 'symmetric');
 
-% CON'MIRROR PADDING'.
+% WITH ZERO PADDING.
 figure, 
-subplot(2,2,1), imshow(Img_RuidoSaltnPepper_Filtro3), title('Filtro SaltnPepper 5x5');
-subplot(2,2,2), imhist(Img_RuidoSaltnPepper_Filtro3), title('Histograma con filtro SaltnPepper - MIRROR PADDING'), axis auto;
-subplot(2,2,3), imshow(Img_RuidoSaltnPepper_Filtro4), title('Filtro SaltnPepper 35x35');
-subplot(2,2,4), imhist(Img_RuidoSaltnPepper_Filtro4), title('Histograma con filtro SaltnPepper 35x35 - MIRROR PADDING'), axis auto;
+subplot(2,2,1), imshow(SaltnPepperNoiseFilter_1), title('SaltnPepper filter 5x5');
+subplot(2,2,2), imhist(SaltnPepperNoiseFilter_1), title('SaltnPepper filter 5x5 histogram'), axis auto;
+subplot(2,2,3), imshow(SaltnPepperNoiseFilter_2), title('SaltnPepper filter 35x35');
+subplot(2,2,4), imhist(SaltnPepperNoiseFilter_2), title('SaltnPepper filter 35x35 histogram'), axis auto;
+
+% WITH MIRROR PADDING.
+figure, 
+subplot(2,2,1), imshow(SaltnPepperNoiseFilter_3), title('SaltnPepper filter 5x5');
+subplot(2,2,2), imhist(SaltnPepperNoiseFilter_3), title('SaltnPepper filter 5x5 histogram'), axis auto;
+subplot(2,2,3), imshow(SaltnPepperNoiseFilter_4), title('SaltnPepper filter 35x35');
+subplot(2,2,4), imhist(SaltnPepperNoiseFilter_4), title('SaltnPepper filter 35x35 histogram'), axis auto;
 %% 2.FILTRADO NO LINEAL - FILTRO DE MEDIANA - RUIDO GAUSSIANO
 close all;
-%CON'ZERO PADDING'.
-Img_RuidoGaussiano_Median1 = medfilt2(Img_GaussianNoise, [5,5]);
-Img_RuidoGaussiano_Median2 = medfilt2(Img_GaussianNoise, [35,35]);
+
+% WITH ZERO PADDING.
+GaussianFilter_Median1 = medfilt2(Img_GaussianNoise, [5,5]);
+GaussianFilter_Median2 = medfilt2(Img_GaussianNoise, [35,35]);
 
 figure, 
-subplot(2,2,1), imshow(Img_RuidoGaussiano_Median1), title('Filtro mediana a GAUSS 5x5');
-subplot(2,2,2), imhist(Img_RuidoGaussiano_Median1), title('Histograma con filtro mediana GAUSS 5x5'), axis auto;
-subplot(2,2,3), imshow(Img_RuidoGaussiano_Median2), title('Filtro mediana a GAUSS35x35');
-subplot(2,2,4), imhist(Img_RuidoGaussiano_Median2), title('Histograma con filtro mediana GAUSS 35x35'), axis auto;
+subplot(2,2,1), imshow(GaussianFilter_Median1), title('Median GAUSS filter 5x5');
+subplot(2,2,2), imhist(GaussianFilter_Median1), title('Median GAUSS filter 5x5 histogram'), axis auto;
+subplot(2,2,3), imshow(GaussianFilter_Median2), title('Median GAUSS filter 35x35');
+subplot(2,2,4), imhist(GaussianFilter_Median2), title('Median GAUSS filter 35x35 histogram'), axis auto;
 
 %CON'MIRROR PADDING'.
-Img_RuidoGaussiano_Median3 = medfilt2(Img_GaussianNoise, [5,5], 'symmetric');
-Img_RuidoGaussiano_Median4 = medfilt2(Img_GaussianNoise, [35,35], 'symmetric');
+GaussianFilter_Median3 = medfilt2(Img_GaussianNoise, [5,5], 'symmetric');
+GaussianFilter_Median4 = medfilt2(Img_GaussianNoise, [35,35], 'symmetric');
 
 figure, 
-subplot(2,2,1), imshow(Img_RuidoGaussiano_Median3), title('Filtro mediana a GAUSS 5x5 - MIRROR P.');
-subplot(2,2,2), imhist(Img_RuidoGaussiano_Median3), title('Histograma con filtro mediana GAUSS 5x5 - MIRROR P.'), axis auto;
-subplot(2,2,3), imshow(Img_RuidoGaussiano_Median4), title('Filtro mediana a GAUSS35x35 - MIRROR P.');
-subplot(2,2,4), imhist(Img_RuidoGaussiano_Median4), title('Histograma con filtro mediana GAUSS 35x35 - MIRROR P.'), axis auto;
+subplot(2,2,1), imshow(GaussianFilter_Median3), title('Median GAUSS filter 5x5');
+subplot(2,2,2), imhist(GaussianFilter_Median3), title('Median GAUSS filter 5x5 histogram'), axis auto;
+subplot(2,2,3), imshow(GaussianFilter_Median4), title('Median GAUSS filter 35x35');
+subplot(2,2,4), imhist(GaussianFilter_Median4), title('Median GAUSS filter 35x35 histogram'), axis auto;
 
 %% FILTRADO NO LINEAL - FILTRO DE MEDIANA - RUIDO SPECKLE
 close all;
