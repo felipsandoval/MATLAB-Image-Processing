@@ -1,39 +1,40 @@
-%% PRACTICA 1 - abriendo archivos y guardando sus mapas de color.
+%% 1st TASK - made x Felipe E. Sandoval Sibada.
+%  1. Reading, visualization and storing images.
 clear all, close all, clc;
-[Pimientos, MAP_Pimientos]=imread('peppers.png');
-[Monedas, MAP_Monedas]=imread('coins.png'); %% AQUI EL MAPA ES 0X0
-[Cara, MAP_Cara]=imread('cara.tif');
-%% 1. MOSTRAR IMAGENES. IMSHOW + FIGURE PARA QUE NO ME SOBRE ESCRIBA
-figure, imshow(Cara); % BINARIA
-figure, imshow(Pimientos); % TRUE COLOR
-figure, imshow(Monedas); % INTENSITY IMAGE (GRAY SCALE)
-%% CON EL COMANDO IMTOOL MUESTRO ADEMAS EL VALOR DE CADA PIXEL
-imtool(Cara); % BINARIA
-imtool(Pimientos); % TRUE COLOR
-imtool(Monedas); % INTENSITY IMAGE (GRAY SCALE)
-%% CONVIRTIENDO ALGUNAS IMAGENES (IMAGEN BINARIA A RGB)
-MAP_Cara_RGB = [255,255,0 ; 255,0,0]
-CaraRGB = ind2rgb(Cara, MAP_Cara_RGB);
+[Peppers, MAP_Peppers]=imread('peppers.png');
+[Coins, MAP_Coins]=imread('coins.png');
+[Face, MAP_Face]=imread('cara.tif');
+%% 1. VISUALIZATION OF IMAGES. IMSHOW + FIGURE for not overwriting.
+figure, imshow(Face); % BINARY IMAGE
+figure, imshow(Peppers); % TRUE COLOR IMAGE
+figure, imshow(Coins); % INTENSITY IMAGE (GRAY SCALE)
+%% With IMTOOL I can watch each pixel information
+imtool(Face); % BINARY IMAGE
+imtool(Peppers); % TRUE COLOR
+imtool(Coins); % INTENSITY IMAGE (GRAY SCALE)
+%% Transformation process (BINARY TO RGB)
+MAP_Face_RGB = [255,255,0; 0,255,0];
+CaraRGB = ind2rgb(Face, MAP_Face_RGB);
 figure, imshow(CaraRGB);
-%% CONVIRTIENDO ALGUNAS IMAGENES (IMAGEN RGB A BINARIA)
-PimientosBW = im2bw(Pimientos);
+%% Transformation process (RGB TO BINARY)
+PimientosBW = im2bw(Peppers);
 figure, imshow(PimientosBW);
-%% CONVIRTIENDO ALGUNAS IMAGENES (IMAGEN RGB A ESCALA DE GRISES)
-PimientosGRAY = rgb2gray(Pimientos);
+%% %% Transformation process (RFB TO GRAYSCALE)
+PimientosGRAY = rgb2gray(Peppers);
 figure, imshow(PimientosGRAY);
 %% CONVIRTIENDO ALGUNAS IMAGENES (IMAGEN RGB A INDEXADA DE 255 NIVELES)
-[Pimientos255, MAP_Pimientos255] = rgb2ind(Pimientos, 255);
+[Pimientos255, MAP_Pimientos255] = rgb2ind(Peppers, 255);
 imtool(Pimientos255, MAP_Pimientos255);
 imwrite(Pimientos255, MAP_Pimientos255, 'Pimientos255.jpeg');
 %% CONVIRTIENDO ALGUNAS IMAGENES (IMAGEN RGB A INDEXADA DE 5 NIVELES)
-[Pimientos5, MAP_Pimientos5] = rgb2ind(Pimientos, 5);
+[Pimientos5, MAP_Pimientos5] = rgb2ind(Peppers, 5);
 imtool(Pimientos5, MAP_Pimientos5);
 imwrite(Pimientos5, MAP_Pimientos5, 'Pimientos5.jpeg');
 %% CONVIRTIENDO ALGUNAS IMAGENES (IMAGEN GRIS A INDEXADA DE 5 NIVELES)
-[Monedas5, MAP_Monedas5] = gray2ind(Monedas, 5);
+[Monedas5, MAP_Monedas5] = gray2ind(Coins, 5);
 imtool(Monedas5, MAP_Monedas5);
 %% CONVIRTIENDO ALGUNAS IMAGENES (IMAGEN DE GRISES A BINARIA)
-MonedasBW = im2bw(Monedas);
+MonedasBW = im2bw(Coins);
 figure, imshow(MonedasBW);
 % figure, imhist(MonedasBW) para poder ver su Histograma
 imwrite(MonedasBW, 'MonedasBw.jpeg');
@@ -92,17 +93,17 @@ subplot(2,1,2), imhist(I_eq), title('Histograma Imagen Ecualizada');
 
 %% 3. INTERPRETACION DEL COLOR Y TRANSFORMACIONES PUNTUALES.
 clear all, close all, clc;
-[Pimientos, MAP_Pimientos]=imread('peppers.png');
-Pimientos_Gray = rgb2gray(Pimientos);
-Pimientos_Red = Pimientos(:,:,1);
+[Peppers, MAP_Peppers]=imread('peppers.png');
+Pimientos_Gray = rgb2gray(Peppers);
+Pimientos_Red = Peppers(:,:,1);
 figure
 subplot(2,1,1), imshow(Pimientos_Gray), title('Original en escala de grises');
 subplot(2,1,2), imshow(Pimientos_Red), title('Componente roja');
 %% HISTOGRAMA DE TODOS LOS COMPONENTES
 close all;
 figure
-Pimientos_Green = Pimientos(:, :, 2);
-Pimientos_Blue = Pimientos(:, :, 3);
+Pimientos_Green = Peppers(:, :, 2);
+Pimientos_Blue = Peppers(:, :, 3);
 subplot(2, 3, 1), imshow(Pimientos_Red), title('Comp. R');
 subplot(2, 3, 2), imshow(Pimientos_Green), title('Comp. G');
 subplot(2, 3, 3), imshow(Pimientos_Blue), title('Comp. B');
@@ -121,15 +122,15 @@ Pimientos_Operados_Red = 255-Pimientos_Red; % Bien!
 % x = I_peppers;
 % x(:,:,1) = NI_roja;
 % 
-Pimientos_Red_Negativo = Pimientos;
+Pimientos_Red_Negativo = Peppers;
 Pimientos_Red_Negativo(:,:,1) = Pimientos_Operados_Red;
 
 Pimientos_Operados_Blue = 255-Pimientos_Blue;
-Pimientos_Blue_Negativo = Pimientos;
+Pimientos_Blue_Negativo = Peppers;
 Pimientos_Blue_Negativo(:,:,3) = Pimientos_Operados_Blue;
 
 Pimientos_Operados_Green = 255-Pimientos_Green;
-Pimientos_Green_Negativo = Pimientos;
+Pimientos_Green_Negativo = Peppers;
 Pimientos_Green_Negativo(:,:,2) = Pimientos_Operados_Green;
 
 
@@ -142,7 +143,7 @@ subplot(3, 1, 3), imshow(Pimientos_Green_Negativo);
 
 %% Representacion de la componente roja (y demas)
 close all;
-Y = zeros(size(Pimientos));
+Y = zeros(size(Peppers));
 Y_red = uint8(Y); % Conversion a uint8 necesaria!
 Y_blue = uint8(Y); % Conversion a uint8 necesaria!
 Y_green = uint8(Y); % Conversion a uint8 necesaria!
