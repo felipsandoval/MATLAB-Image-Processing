@@ -47,10 +47,10 @@ GaussianFilter_3 = imfilter(Img_GaussianNoise, Mask1, 'symmetric');
 GaussianFilter_4 = imfilter(Img_GaussianNoise, Mask2, 'symmetric');
 
 figure, 
-subplot(2,2,1), imshow(GaussianFilter_3), title('GAUSS filter 5x5');
-subplot(2,2,2), imhist(GaussianFilter_3), title('GAUSS filter 5x5 histogram'), axis auto;
-subplot(2,2,3), imshow(GaussianFilter_4), title('GAUSS filter 35x35');
-subplot(2,2,4), imhist(GaussianFilter_4), title('GAUSS filter 35x35 histogram'), axis auto;
+subplot(2,2,1), imshow(GaussianFilter_3), title('GAUSS filter 5x5 MIRROR PADDING');
+subplot(2,2,2), imhist(GaussianFilter_3), title('GAUSS filter 5x5 histogram MIRROR PADDING'), axis auto;
+subplot(2,2,3), imshow(GaussianFilter_4), title('GAUSS filter 35x35 MIRROR PADDING');
+subplot(2,2,4), imhist(GaussianFilter_4), title('GAUSS filter 35x35 histogram MIRROR PADDING'), axis auto;
 
 %NOTE: Masks are double type and the images uint8.
 %% SPECKLE NOISE
@@ -72,10 +72,10 @@ subplot(2,2,4), imhist(SpeckleNoiseFilter_2), title('SPECKLE filter 35x35 histog
 
 % WITH MIRROR PADDING.
 figure, 
-subplot(2,2,1), imshow(SpeckleNoiseFilter_3), title('SPECKLE filter 5x5');
-subplot(2,2,2), imhist(SpeckleNoiseFilter_3), title('SPECKLE filter 5x5 histogram'), axis auto;
-subplot(2,2,3), imshow(SpeckleNoiseFilter_4), title('SPECKLE filter 35x35');
-subplot(2,2,4), imhist(SpeckleNoiseFilter_4), title('SPECKLE filter 35x35 histogram'), axis auto;
+subplot(2,2,1), imshow(SpeckleNoiseFilter_3), title('SPECKLE filter 5x5 MIRROR PADDING');
+subplot(2,2,2), imhist(SpeckleNoiseFilter_3), title('SPECKLE filter 5x5 histogram MIRROR PADDING'), axis auto;
+subplot(2,2,3), imshow(SpeckleNoiseFilter_4), title('SPECKLE filter 35x35 MIRROR PADDING');
+subplot(2,2,4), imhist(SpeckleNoiseFilter_4), title('SPECKLE filter 35x35 histogram MIRROR PADDING'), axis auto;
 
 %% SALT N PEPPER NOISE
 
@@ -96,10 +96,10 @@ subplot(2,2,4), imhist(SaltnPepperNoiseFilter_2), title('SaltnPepper filter 35x3
 
 % WITH MIRROR PADDING.
 figure, 
-subplot(2,2,1), imshow(SaltnPepperNoiseFilter_3), title('SaltnPepper filter 5x5');
-subplot(2,2,2), imhist(SaltnPepperNoiseFilter_3), title('SaltnPepper filter 5x5 histogram'), axis auto;
-subplot(2,2,3), imshow(SaltnPepperNoiseFilter_4), title('SaltnPepper filter 35x35');
-subplot(2,2,4), imhist(SaltnPepperNoiseFilter_4), title('SaltnPepper filter 35x35 histogram'), axis auto;
+subplot(2,2,1), imshow(SaltnPepperNoiseFilter_3), title('SaltnPepper filter 5x5 MIRROR PADDING');
+subplot(2,2,2), imhist(SaltnPepperNoiseFilter_3), title('SaltnPepper filter 5x5 histogram MIRROR PADDING'), axis auto;
+subplot(2,2,3), imshow(SaltnPepperNoiseFilter_4), title('SaltnPepper filter 35x35 MIRROR PADDING');
+subplot(2,2,4), imhist(SaltnPepperNoiseFilter_4), title('SaltnPepper filter 35x35 histogram MIRROR PADDING'), axis auto;
 %% 2.NO LINEAR FILTERS - MEDIAN FILTER - GAUSSIAN NOISE.
 close all;
 
@@ -168,7 +168,7 @@ subplot(2,2,2), imhist(SnP_Median3), title('Median SALT N PEPPER filter 5x5 hist
 subplot(2,2,3), imshow(SnP_Median4), title('Median SALT N PEPPER filter 35x35');
 subplot(2,2,4), imhist(SnP_Median4), title('Median SALT N PEPPER filter 35x35 histogram'), axis auto;
 
-%% 3. SPATIAL FILTERS - EDGE ENHANCEMENT
+%% 3. SPATIAL FILTERS - EDGE ENHANCEMENT - PREWITT FILTER
 clc, close all, clear all;
 
 [Coins, MAP_coins] = imread('coins.png');
@@ -198,7 +198,7 @@ Filtered_Coins = imfilter(double(Coins), H, 'symmetric'); % WITH MIRROR PADDING
 figure,
 subplot(1,2,1), mesh(abs(Filtered_Coins)), title('Filtered 3D Graph');
 subplot(1,2,2), imshow(uint8(abs(Filtered_Coins))), title('Filtered image');
-%% 3. SPATIAL FILTERS - EDGE ENHANCEMENT WITH TRANSPOSE H AND DOUBLE
+%% 3. SPATIAL FILTERS - EDGE ENHANCEMENT WITH TRANSPOSE H AND DOUBLE - CORRECT ONE
 clc, close all, clear all;
 
 [Coins, MAP_coins] = imread('coins.png');
@@ -218,17 +218,20 @@ subplot(1,2,2), imshow(uint8(abs(Filtered_Coins))), title('Filtered image');
 %% CONTINUE WITH JUST ONE STEP FROM LAST EXECUTION.
 
 Coins_grad_Prewitt = uint8(0.5*(abs(Filtered_Coins) + abs(Filtered_Coins_2))); %Using absolute not double
+
 figure,
 subplot(1,2,1), mesh(Coins_grad_Prewitt), title('Gradient graph');
 subplot(1,2,2), imshow(Coins_grad_Prewitt), title('Gradient');
 
 Coins_grad_Binary = im2bw(Coins_grad_Prewitt, 0.2);
+
 figure,
 subplot(1,2,1), mesh(Coins_grad_Binary), title('Gradient binary graph');
 subplot(1,2,2), imshow(Coins_grad_Binary), title('Gradient binary');
  
 % Then triying with an isotropic filter.
 %% ISOTROPIC FILTER - EDGE ENHANCEMENT
+% Is not the ideal filter because our image has noise
 H_ISO = [-1 -1 -1
          -1  8 -1
          -1 -1 -1];
@@ -242,18 +245,18 @@ subplot(1,2,1), mesh(abs(Filtered_Coins_ISO)), title('Filtered 3D Graph');
 subplot(1,2,2), imshow(uint8(abs(Filtered_Coins_2_ISO))), title('Filtered image');
 
 Coins_grad_Prewitt_ISO = uint8(0.5*(abs(Filtered_Coins_ISO) + abs(Filtered_Coins_2_ISO))); %Using absolute not double
+
 figure,
 subplot(1,2,1), mesh(Coins_grad_Prewitt_ISO), title('Gradient graph ISO');
 subplot(1,2,2), imshow(Coins_grad_Prewitt_ISO), title('Gradient ISO');
 
 Coins_grad_Binary_ISO = im2bw(Coins_grad_Prewitt_ISO, 0.2);
+
 figure,
 subplot(1,2,1), mesh(Coins_grad_Binary_ISO), title('Gradient binary graph ISO');
 subplot(1,2,2), imshow(Coins_grad_Binary_ISO), title('Gradient binary ISO');
  
-% Then triying with an isotropic filter.
-%% Filtering with preprocessing
-
+%% Prewitt Filtering with preprocessing
 Coins_soft = medfilt2(Coins, [11 11], 'symmetric');
 Coins_soft_BW = im2bw(Coins_soft, 0.4);
 
@@ -262,13 +265,30 @@ subplot(1,3,1), imshow(Coins_soft);
 subplot(1,3,2), imhist(Coins_soft);
 subplot(1,3,3), imshow(Coins_soft_BW);
 
-%% 
+Filtered_Coins_BW = imfilter(double(Coins_soft_BW), H, 'symmetric'); % WITH MIRROR PADDING 
+Filtered_Coins_BW_2 = imfilter(double(Coins_soft_BW), H_2, 'symmetric'); % WITH MIRROR PADDING (transpose)
 
-I_mordor = imread('mordor2.jpg');
-figure, subplot(1,2,1);
-imhist(I_suav);
-%ylim('auto');
-subplot(1,2,2);
-imshow(I_mordor);
-%title('mordor');
-%% 4. IMAGE COMPOSITION
+figure,
+subplot(1,2,1), mesh(abs(Filtered_Coins_BW)), title('Filtered 3D Graph');
+subplot(1,2,2), imshow(uint8(abs(Filtered_Coins_BW))), title('Filtered Image with H');
+
+Coins_BW_enhancement = uint8(0.5*(abs(Filtered_Coins) + abs(Filtered_Coins_2))); %Using absolute not double
+
+figure,
+subplot(1,2,1), mesh(Coins_BW_enhancement), title('Gradient graph');
+subplot(1,2,2), imshow(Coins_BW_enhancement), title('Final enhancement');
+
+%% 4. IMAGE COMPOSITION with Coins_BW + isotropic filter
+
+LUT = [0 0 0; 255 0 0]; % For colouring the edge
+Coins_BW_enhancement_2 = imfilter(double(Coins_soft_BW), H_ISO, 'symmetric'); % WITH MIRROR PADDING 
+Coins_Red_Enhancement = uint8(ind2rgb(Coins_BW_enhancement_2, LUT));
+
+figure, imshow(Coins_Red_Enhancement), title('Red Edges');
+
+Coins_New(:,:,1) = Coins;
+Coins_New(:,:,2) = Coins;
+Coins_New(:,:,3) = Coins;
+
+Coins_final = imadd(Coins_New, Coins_Red_Enhancement);
+figure, imshow(Coins_final), title('Red Edges + Original Image');
