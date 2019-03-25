@@ -1,10 +1,13 @@
 %% 1st TASK - made x Felipe E. Sandoval Sibada.
 %  1. Reading, visualization and storing images.
+
 clear all, close all, clc;
 [Peppers, MAP_Peppers]=imread('peppers.png');
 [Coins, MAP_Coins]=imread('coins.png');
 [Face, MAP_Face]=imread('cara.tif');
+
 %% 1. VISUALIZATION OF IMAGES. IMSHOW + FIGURE for not overwriting.
+
 figure, imshow(Face); % BINARY IMAGE
 figure, imshow(Peppers); % TRUE COLOR IMAGE
 figure, imshow(Coins); % INTENSITY IMAGE (GRAY SCALE)
@@ -14,147 +17,151 @@ imtool(Peppers); % TRUE COLOR
 imtool(Coins); % INTENSITY IMAGE (GRAY SCALE)
 %% Transformation process (BINARY TO RGB)
 MAP_Face_RGB = [255,255,0; 0,255,0];
-CaraRGB = ind2rgb(Face, MAP_Face_RGB);
-figure, imshow(CaraRGB);
+FaceRGB = ind2rgb(Face, MAP_Face_RGB);
+figure, imshow(FaceRGB);
 %% Transformation process (RGB TO BINARY)
-PimientosBW = im2bw(Peppers);
-figure, imshow(PimientosBW);
-%% %% Transformation process (RFB TO GRAYSCALE)
-PimientosGRAY = rgb2gray(Peppers);
-figure, imshow(PimientosGRAY);
-%% CONVIRTIENDO ALGUNAS IMAGENES (IMAGEN RGB A INDEXADA DE 255 NIVELES)
-[Pimientos255, MAP_Pimientos255] = rgb2ind(Peppers, 255);
-imtool(Pimientos255, MAP_Pimientos255);
-imwrite(Pimientos255, MAP_Pimientos255, 'Pimientos255.jpeg');
-%% CONVIRTIENDO ALGUNAS IMAGENES (IMAGEN RGB A INDEXADA DE 5 NIVELES)
-[Pimientos5, MAP_Pimientos5] = rgb2ind(Peppers, 5);
-imtool(Pimientos5, MAP_Pimientos5);
-imwrite(Pimientos5, MAP_Pimientos5, 'Pimientos5.jpeg');
-%% CONVIRTIENDO ALGUNAS IMAGENES (IMAGEN GRIS A INDEXADA DE 5 NIVELES)
-[Monedas5, MAP_Monedas5] = gray2ind(Coins, 5);
-imtool(Monedas5, MAP_Monedas5);
-%% CONVIRTIENDO ALGUNAS IMAGENES (IMAGEN DE GRISES A BINARIA)
-MonedasBW = im2bw(Coins);
-figure, imshow(MonedasBW);
-% figure, imhist(MonedasBW) para poder ver su Histograma
-imwrite(MonedasBW, 'MonedasBw.jpeg');
+PeppersBW = im2bw(Peppers);
+figure, imshow(PeppersBW);
+%% Transformation process (RGB TO GRAYSCALE)
+PeppersGRAY = rgb2gray(Peppers);
+figure, imshow(PeppersGRAY);
+%% Transformation process (RGB TO INDEXED OF 255 LEVELS)
+[Peppers255, MAP_Peppers255] = rgb2ind(Peppers, 255);
+imtool(Peppers255, MAP_Peppers255);
+imwrite(Peppers255, MAP_Peppers255, 'Peppers255levels.jpeg');
+%% Transformation process (RGB TO INDEXED OF 5 LEVELS)
+[Peppers5, MAP_Peppers5] = rgb2ind(Peppers, 5);
+imtool(Peppers5, MAP_Peppers5);
+imwrite(Peppers5, MAP_Peppers5, 'Peppers5levels.jpeg');
+%% Transformation process (GRAYSCALE TO INDEXED OF 5 LEVELS)
+[Coins5, MAP_Coins5] = gray2ind(Coins, 5);
+imtool(Coins5, MAP_Coins5);
+%% Transformation process  (GREYSCALE TO BINARY)
+CoinsBW = im2bw(Coins);
+figure, imshow(CoinsBW);
+% figure, imhist(MonedasBW) displays histogram from image
+imwrite(CoinsBW, 'CoinsBw.jpeg');
 
-%% 2. MODIFICACION DE RESOLUCION ESPACIAL Y DE LA INTENSIDAD.
+%% 2. CHANGES IN SPATIAL RESOLUTION AND INTENSITY.
+
 clc, clear all, close all;
 [Lena_512, MAP_Lena_512] = imread('Lena_512.tif');
 Lena_256 = imresize(Lena_512,0.5);
 imwrite(Lena_256, 'Lena_256.tif');
 Lena_128 = imresize(Lena_512, 0.25);
 imwrite(Lena_128, 'Lena_128.tif');
-%% Selecciono la imagen de menor resolucion espacial y la interpolo
+%% Selecting the smaller resolution and interpolating.
 Lena_128a = imresize(Lena_128, 4);
 imwrite(Lena_128a, 'Lena_128a.tif');
 figure, imshow(Lena_128a)
 
-%% EXPLICAR QUE HACE ESTO DE NEAREST Y BILINEAR
+%% NEAREST AND BILINEAR DIFF.
 Lena_512a = imresize(Lena_128,4,'nearest'); 
-figure, imshow(Lena_512a)
 Lena_512b = imresize(Lena_128,4,'bilinear'); 
-figure, imshow(Lena_512b)
-%% REDIMENSIONANDO LOS NIVELES DE INTENSIDAD
+figure, 
+subplot(1,2,1), imshow(Lena_512a), title('Nearest');
+subplot(1,2,2), imshow(Lena_512b), title('Bilinear');
+%% Changing intensity levels
 
 [Lena_512_16, MAP_16] = gray2ind(Lena_512, 16);
-figure, imshow(Lena_512_16,MAP_16), title('16 niveles');
-
 [Lena_512_4, MAP_4] = gray2ind(Lena_512, 4);
-figure, imshow(Lena_512_4,MAP_4), title('4 niveles');
-
 [Lena_512_2, MAP_2] = gray2ind(Lena_512, 2);
-figure, imshow(Lena_512_2,MAP_2), title('2 niveles');
-imtool(Lena_512_2,MAP_2);
 
-%% 3. HISTOGRAMA Y MEJORA DE CONTRASTE.
+subplot(1,3,1), imshow(Lena_512_16,MAP_16), title('16 levels');
+subplot(1,3,2), imshow(Lena_512_4,MAP_4), title('4 levels');
+subplot(1,3,3), imshow(Lena_512_2,MAP_2), title('2 levels');
+
+%% 3. HISTOGRAM Y CONTRAST STRETCHING.
 close all;
 
 figure
-subplot(4,1,1), imhist(Lena_512), title('Histograma Original');
-subplot(4,1,2), imhist(Lena_512_16, MAP_16), title('Histograma 16');
-subplot(4,1,3), imhist(Lena_512_4, MAP_4), title('Histograma 4');
-subplot(4,1,4), imhist(Lena_512_2, MAP_2), title('Histograma 2');
+subplot(4,1,1), imhist(Lena_512), title('Original Histogram');
+subplot(4,1,2), imhist(Lena_512_16, MAP_16), title('Histogram 16 levels');
+subplot(4,1,3), imhist(Lena_512_4, MAP_4), title('Histogram 4 levels');
+subplot(4,1,4), imhist(Lena_512_2, MAP_2), title('Histogram 2 levels');
 
 % figure, imhist(Lena_512_2, 256), axis auto;
-%% ECUALIZANDO EL CONTRASTE
-
+%% HISTOGRAM EQUALIZATION
 clc, close all;
+
 I = imread('pout.tif'); 
 I_eq = histeq(I);
-figure 
-subplot(2,1,1), imshow(I), title('Imagen Original');
-subplot(2,1,2), imshow(I_eq), title('Imagen Ecualizada');
+figure,
+subplot(2,1,1), imshow(I), title('Original');
+subplot(2,1,2), imshow(I_eq), title('Equalized');
 
 figure 
-subplot(2,1,1), imhist(I), title('Histograma Imagen Original');
-subplot(2,1,2), imhist(I_eq), title('Histograma Imagen Ecualizada');
+subplot(2,1,1), imhist(I), title('Original histogram');
+subplot(2,1,2), imhist(I_eq), title('Histogram Equalization');
 
-%% 3. INTERPRETACION DEL COLOR Y TRANSFORMACIONES PUNTUALES.
+%% 3. COLOR INTERPRETATION AND POINT TRANSFORMATIONS
+
 clear all, close all, clc;
+
 [Peppers, MAP_Peppers]=imread('peppers.png');
-Pimientos_Gray = rgb2gray(Peppers);
-Pimientos_Red = Peppers(:,:,1);
-figure
-subplot(2,1,1), imshow(Pimientos_Gray), title('Original en escala de grises');
-subplot(2,1,2), imshow(Pimientos_Red), title('Componente roja');
-%% HISTOGRAMA DE TODOS LOS COMPONENTES
-close all;
-figure
-Pimientos_Green = Peppers(:, :, 2);
-Pimientos_Blue = Peppers(:, :, 3);
-subplot(2, 3, 1), imshow(Pimientos_Red), title('Comp. R');
-subplot(2, 3, 2), imshow(Pimientos_Green), title('Comp. G');
-subplot(2, 3, 3), imshow(Pimientos_Blue), title('Comp. B');
-subplot(2, 3, 4), imhist(Pimientos_Red), title('Histograma R');
-subplot(2, 3, 5), imhist(Pimientos_Green), title('Histograma G');
-subplot(2, 3, 6), imhist(Pimientos_Blue), title('Histograma B');
+Peppers_Gray = rgb2gray(Peppers);
+Peppers_Red = Peppers(:,:,1);
 
-%% Negativo y recomposicion
+figure,
+subplot(2,1,1), imshow(Peppers_Gray), title('Grayscale');
+subplot(2,1,2), imshow(Peppers_Red), title('Red Component');
+%% ALL HISTOGRAMS
 close all;
-%Pimientos_Operados_Red = -Pimientos_Red + 255; Mal!!!
-Pimientos_Operados_Red = 255-Pimientos_Red; % Bien!
+
+Peppers_Green = Peppers(:, :, 2);
+Peppers_Blue = Peppers(:, :, 3);
+
+figure,
+subplot(2, 3, 1), imshow(Peppers_Red), title('R component');
+subplot(2, 3, 2), imshow(Peppers_Green), title('G component');
+subplot(2, 3, 3), imshow(Peppers_Blue), title('B component');
+subplot(2, 3, 4), imhist(Peppers_Red), title('Histogram R');
+subplot(2, 3, 5), imhist(Peppers_Green), title('Histogram G');
+subplot(2, 3, 6), imhist(Peppers_Blue), title('Histogram B');
+
+%% Negative and recomposition
+close all;
+%Peppers_Negative_Red = -Peppers_Red + 255; Bad!!!
+Peppers_Operated_Red = 255-Peppers_Red; % Good!!!
 % 
-% Volver a construir la imagen original, conservando G y B pero a�adiendo
-% el negativo de la componente roja.
-% 1) Copia de la imagen original
-% x = I_peppers;
+% Trying to recreate de original image keeping G and B components and
+% negative R component.
+
 % x(:,:,1) = NI_roja;
-% 
-Pimientos_Red_Negativo = Peppers;
-Pimientos_Red_Negativo(:,:,1) = Pimientos_Operados_Red;
+ 
+Peppers_Negative_Red = Peppers;
+Peppers_Negative_Red(:,:,1) = Peppers_Operated_Red;
 
-Pimientos_Operados_Blue = 255-Pimientos_Blue;
-Pimientos_Blue_Negativo = Peppers;
-Pimientos_Blue_Negativo(:,:,3) = Pimientos_Operados_Blue;
+Peppers_Operated_Blue = 255-Peppers_Blue;
+Peppers_Blue_Negative = Peppers;
+Peppers_Blue_Negative(:,:,3) = Peppers_Operated_Blue;
 
-Pimientos_Operados_Green = 255-Pimientos_Green;
-Pimientos_Green_Negativo = Peppers;
-Pimientos_Green_Negativo(:,:,2) = Pimientos_Operados_Green;
+Peppers_Operated_Green = 255-Peppers_Green;
+Peppers_Green_Negative = Peppers;
+Peppers_Green_Negative(:,:,2) = Peppers_Operated_Green;
 
 
 figure 
-subplot(3, 1, 1), imshow(Pimientos_Red_Negativo);
-subplot(3, 1, 2), imshow(Pimientos_Blue_Negativo);
-subplot(3, 1, 3), imshow(Pimientos_Green_Negativo);
+subplot(1, 3, 1), imshow(Peppers_Negative_Red);
+subplot(1, 3, 2), imshow(Peppers_Blue_Negative);
+subplot(1, 3, 3), imshow(Peppers_Green_Negative);
 % imtool(x);
-% Para comprobar que sale bien, el ajo deber�a ser m�s o menos color cyan
 
-%% Representacion de la componente roja (y demas)
+%% Red component representation
+
 close all;
 Y = zeros(size(Peppers));
-Y_red = uint8(Y); % Conversion a uint8 necesaria!
-Y_blue = uint8(Y); % Conversion a uint8 necesaria!
-Y_green = uint8(Y); % Conversion a uint8 necesaria!
-Y_red(:,:,1) = Pimientos_Red;
-Y_blue(:,:,3) = Pimientos_Blue;
-Y_green(:,:,2) = Pimientos_Green;
+Y_red = uint8(Y); % uint8 convertion!
+Y_blue = uint8(Y); % uint8 convertion!
+Y_green = uint8(Y); % uint8 convertion!
+Y_red(:,:,1) = Peppers_Red;
+Y_green(:,:,2) = Peppers_Green;
+Y_blue(:,:,3) = Peppers_Blue;
 
 figure,
 subplot(2, 3, 1), imshow(Y_red), title('Red');
-subplot(2, 3, 2), imshow(Y_blue), title('Blue');
 subplot(2, 3, 3), imshow(Y_green), title('Green');
-subplot(2, 3, 4), imhist(Y_red), title('Histograma R');
-subplot(2, 3, 5), imhist(Y_blue), title('Histograma B');
-subplot(2, 3, 6), imhist(Y_green), title('Histograma G');
+subplot(2, 3, 2), imshow(Y_blue), title('Blue');
+subplot(2, 3, 4), imhist(Y_red), title('R Histogram');
+subplot(2, 3, 5), imhist(Y_green), title('G Histogram');
+subplot(2, 3, 6), imhist(Y_blue), title('B Histogram');
