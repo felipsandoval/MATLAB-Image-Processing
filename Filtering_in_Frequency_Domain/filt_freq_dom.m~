@@ -1,0 +1,26 @@
+%% 3rd TASK - made x Felipe E. Sandoval Sibada.
+%  1. Frequency representation
+clc, close all, clear all;
+[Triangle, MAP_Triangle] = imread('triangulo.bmp');
+Triangle_FFT = fftshift(fft2(double(Triangle), 256, 256)); 
+FFT_Module = abs(Triangle_FFT);
+FFT_Phase = angle(Triangle_FFT);
+
+% FFT uses complex numbers. To plot them I will need to get the module
+% and the phase
+
+figure,
+subplot(1,4,1), imshow(Triangle), title('Original');
+subplot(1,2,1), imshow(FFT_Module), title('FFT MODULE graph');
+subplot(1,2,2), imshow(FFT_Phase), title('FFT PHASE graph');
+subplot(1,4,3), mesh(FFT_Module), title('FFT MODULE graph');
+subplot(1,4,4), mesh(FFT_Phase), title('FFT PHASE graph');
+
+% Energy is concentrated in 0 axis value. The module have 3 orientations.
+%%
+subplot(2,4,3), imtool(FFT_Module, []), title('Original');
+subplot(2,4,4), imtool(FFT_Phase, []), title('Original');
+subplot(2,4,5), mesh(Triangle), title('Original');
+subplot(2,4,6), mesh(Triangle), title('Original');
+subplot(2,4,7), mesh(Triangle), title('Original');
+subplot(2,4,8), mesh(Triangle), title('Original');
